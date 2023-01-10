@@ -48,21 +48,3 @@ var query = provider.GetRequiredService<CustomerQuery>();
 var customer = await query.Execute(token.AccessToken);
 
 Console.WriteLine($"Customer: {customer.FirstName} {customer.LastName}");
-
-// Console.WriteLine("Hello, World!");
-
-// var mutation = new MutationQueryBuilder()
-//     .WithCustomerAccessTokenCreate(
-//         new CustomerAccessTokenCreatePayloadQueryBuilder()
-//             .ExceptCustomerAccessToken()
-//             .ExceptCustomerUserErrors(),
-//         new CustomerAccessTokenCreateInput { Email = "rickychiang+demo20221229@91app.com", Password = "p@ssw0rd" }
-//     ).Build(Formatting.Indented, 2);
-//
-// Console.WriteLine(mutation);
-
-// var query = new CustomerQueryBuilder()
-//     .ExceptId()
-//     .ExceptEmail()
-//     .ExceptFirstName()
-//     .ExceptLastName()
