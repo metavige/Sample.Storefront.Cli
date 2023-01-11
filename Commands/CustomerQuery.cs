@@ -34,12 +34,9 @@ public class CustomerQuery
             );
 
         var queryString = builder.Build();
+        Console.Write(queryString);
 
-        var request = new GraphQLRequest
-        {
-            Query = queryString,
-            Variables = new { customerAccessToken = accessToken }
-        };
+        var request = new GraphQLRequest(queryString, new { customerAccessToken = accessToken });
         var response = await _client.SendQueryAsync<CustomerQueryResponse>(request);
 
         return response.Data.Customer;

@@ -1,11 +1,21 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics;
 using System.Text.Json;
 using GraphQL.Client.Abstractions;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.SystemTextJson;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
+using Serilog.Events;
 using Spectre.Console;
 using Storefront.Cli.Commands;
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Debug)
+    .MinimumLevel.Override("GraphQL", LogEventLevel.Debug)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .CreateLogger();
 
 var apiToken = Environment.GetEnvironmentVariable("STOREFRONT_API_TOKEN");
 
@@ -17,6 +27,7 @@ if (string.IsNullOrEmpty(apiToken))
 }
 
 var services = new ServiceCollection();
+services.AddLogging(logger => logger.AddSerilog());
 services.AddHttpClient();
 services.AddSingleton<IGraphQLClient>(sp =>
     {
@@ -35,16 +46,28 @@ services.AddSingleton<IGraphQLClient>(sp =>
 
 services.AddSingleton<CustomerAccessTokenCreateCommand>();
 services.AddSingleton<CustomerQuery>();
+services.AddSingleton<ProductionQuery>();
+services.AddSingleton<CreateCartCommand>();
 
 var provider = services.BuildServiceProvider();
 
-var email = AnsiConsole.Ask<string>("[green]Your email address?[/]");
-var password = AnsiConsole.Ask<string>("[green]Password?[/]");
+// var email = AnsiConsole.Ask<string>("[green]Your email address?[/]");
+// var password = AnsiConsole.Ask<string>("[green]Password?[/]");
+// //
+// var accessTokenCommand = provider.GetRequiredService<CustomerAccessTokenCreateCommand>();
+// var token = await accessTokenCommand.Execute(email, password);
+//
+// Log.Logger.Debug("Token: {Token}", token.AccessToken);
 
-var command = provider.GetRequiredService<CustomerAccessTokenCreateCommand>();
-var token = await command.Execute(email, password);
+// var query = provider.GetRequiredService<CustomerQuery>();
+// var customer = await query.Execute(token.AccessToken);
+//
+// Console.WriteLine($"Customer: {customer.FirstName} {customer.LastName}");
 
-var query = provider.GetRequiredService<CustomerQuery>();
-var customer = await query.Execute(token.AccessToken);
+// TODO: Not working
+var prodQuery = provider.GetRequiredService<ProductionQuery>();
+prodQuery.Execute();
 
-Console.WriteLine($"Customer: {customer.FirstName} {customer.LastName}");
+// TODO: Not working
+var cartCreateCommand = provider.GetRequiredService<CreateCartCommand>();
+cartCreateCommand.Execute();

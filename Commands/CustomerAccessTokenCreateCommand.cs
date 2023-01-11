@@ -1,5 +1,6 @@
 using GraphQL;
 using GraphQL.Client.Abstractions;
+using Microsoft.Extensions.Logging;
 
 namespace Storefront.Cli.Commands;
 
@@ -7,13 +8,18 @@ public class CustomerAccessTokenCreateCommand
 {
     #region Fields
 
+    private readonly ILogger<CustomerAccessTokenCreateCommand> _logger;
     private readonly IGraphQLClient _client;
 
     #endregion
 
     #region Constructors
 
-    public CustomerAccessTokenCreateCommand(IGraphQLClient client) { _client = client; }
+    public CustomerAccessTokenCreateCommand(IGraphQLClient client, ILogger<CustomerAccessTokenCreateCommand> logger)
+    {
+        _client = client;
+        _logger = logger;
+    }
 
     #endregion
 
@@ -21,25 +27,18 @@ public class CustomerAccessTokenCreateCommand
 
     public async Task<CustomerAccessToken> Execute(string email, string password)
     {
-        var request = new GraphQLRequest
-        {
-            Query = @"mutation customerAccessTokenCreate($input: CustomerAccessTokenCreateInput!) {
-                  customerAccessTokenCreate(input: $input) {
-                    customerAccessToken {
-                        accessToken
-                        expiresAt
-                    }
-                    customerUserErrors {
-                      code
-                      message
-                    }
-                  }
-                }",
-            OperationName = "customerAccessTokenCreate",
-            Variables = new { input = new { email, password } }
-        };
+        var builder = new MutationQueryBuilder()
+            .WithCustomerAccessTokenCreate(
+                new CustomerAccessTokenCreatePayloadQueryBuilder().WithCustomerAccessToken(new CustomerAccessTokenQueryBuilder()
+                    .WithAccessToken()
+                    .WithExpiresAt()
+                ),
+                new CustomerAccessTokenCreateInput { Email = email, Password = password }
+            );
+ 
+        _logger.LogDebug(builder.Build(Formatting.Indented));
 
-        var response = await _client.SendMutationAsync<Mutation>(request);
+        var response = await _client.SendMutationAsync<Mutation>(new GraphQLRequest(builder.Build()));
         
         return response.Data.CustomerAccessTokenCreate.CustomerAccessToken;
     }

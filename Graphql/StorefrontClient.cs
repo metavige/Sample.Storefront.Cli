@@ -15765,9 +15765,9 @@ namespace Storefront.Cli
         #if !GRAPHQL_GENERATOR_DISABLE_NEWTONSOFT_JSON
         [JsonConverter(typeof(QueryBuilderParameterConverter<Guid?>))]
         #endif
-        public QueryBuilderParameter<Guid?> MerchandiseId
+        public QueryBuilderParameter<string?> MerchandiseId
         {
-            get { return (QueryBuilderParameter<Guid?>)_merchandiseId.Value; }
+            get { return (QueryBuilderParameter<string?>)_merchandiseId.Value; }
             set { _merchandiseId = new InputPropertyInfo { Name = "merchandiseId", Value = value }; }
         }
 
@@ -17026,7 +17026,7 @@ namespace Storefront.Cli
     {
         public MoneyV2 AmountUsed { get; set; }
         public MoneyV2 Balance { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public string LastCharacters { get; set; }
         public MoneyV2 PresentmentAmountUsed { get; set; }
     }
@@ -17042,7 +17042,7 @@ namespace Storefront.Cli
         public string Excerpt { get; set; }
         public object ExcerptHtml { get; set; }
         public string Handle { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public Image Image { get; set; }
         public Metafield Metafield { get; set; }
         public ICollection<Metafield> Metafields { get; set; }
@@ -17104,7 +17104,7 @@ namespace Storefront.Cli
         public ArticleConnection Articles { get; set; }
         public ICollection<ArticleAuthor> Authors { get; set; }
         public string Handle { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public Metafield Metafield { get; set; }
         public ICollection<Metafield> Metafields { get; set; }
         public object OnlineStoreUrl { get; set; }
@@ -17162,7 +17162,7 @@ namespace Storefront.Cli
         #endif
         public ICollection<ICartDiscountAllocation> DiscountAllocations { get; set; }
         public ICollection<CartDiscountCode> DiscountCodes { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public CartLineConnection Lines { get; set; }
         public string Note { get; set; }
         public int? TotalQuantity { get; set; }
@@ -17235,7 +17235,7 @@ namespace Storefront.Cli
         public CartLineConnection CartLines { get; set; }
         public MailingAddress DeliveryAddress { get; set; }
         public ICollection<CartDeliveryOption> DeliveryOptions { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public CartDeliveryOption SelectedDeliveryOption { get; set; }
     }
 
@@ -17298,7 +17298,7 @@ namespace Storefront.Cli
         [JsonConverter(typeof(GraphQlInterfaceJsonConverter))]
         #endif
         public ICollection<ICartDiscountAllocation> DiscountAllocations { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public Merchandise Merchandise { get; set; }
         public int? Quantity { get; set; }
         public SellingPlanAllocation SellingPlanAllocation { get; set; }
@@ -17383,7 +17383,7 @@ namespace Storefront.Cli
         public ICollection<Attribute> CustomAttributes { get; set; }
         public DiscountApplicationConnection DiscountApplications { get; set; }
         public string Email { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public CheckoutLineItemConnection LineItems { get; set; }
         public MoneyV2 LineItemsSubtotalPrice { get; set; }
         public string Note { get; set; }
@@ -17491,7 +17491,7 @@ namespace Storefront.Cli
     {
         public ICollection<Attribute> CustomAttributes { get; set; }
         public ICollection<DiscountAllocation> DiscountAllocations { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public int? Quantity { get; set; }
         public string Title { get; set; }
         public MoneyV2 UnitPrice { get; set; }
@@ -17561,7 +17561,7 @@ namespace Storefront.Cli
         public string Description { get; set; }
         public object DescriptionHtml { get; set; }
         public string Handle { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public Image Image { get; set; }
         public Metafield Metafield { get; set; }
         public ICollection<Metafield> Metafields { get; set; }
@@ -17591,7 +17591,7 @@ namespace Storefront.Cli
         public CommentAuthor Author { get; set; }
         public string Content { get; set; }
         public object ContentHtml { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
     }
 
     public class CommentAuthor
@@ -17783,7 +17783,7 @@ namespace Storefront.Cli
         public string FirstName { get; set; }
         public ICollection<string> Formatted { get; set; }
         public string FormattedArea { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public string LastName { get; set; }
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }
@@ -17860,7 +17860,7 @@ namespace Storefront.Cli
         public string Alt { get; set; }
         public object EmbedUrl { get; set; }
         public MediaHost? Host { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public MediaContentType? MediaContentType { get; set; }
         public object OriginUrl { get; set; }
         public Image PreviewImage { get; set; }
@@ -17918,7 +17918,7 @@ namespace Storefront.Cli
     public class GenericFile : INode
     {
         public string Alt { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public string MimeType { get; set; }
         public int? OriginalFileSize { get; set; }
         public Image PreviewImage { get; set; }
@@ -17935,7 +17935,7 @@ namespace Storefront.Cli
     {
         public string AltText { get; set; }
         public int? Height { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public object Url { get; set; }
         public int? Width { get; set; }
     }
@@ -17972,7 +17972,7 @@ namespace Storefront.Cli
     public class Location : INode
     {
         public LocationAddress Address { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public string Name { get; set; }
     }
 
@@ -18017,7 +18017,7 @@ namespace Storefront.Cli
         public string FirstName { get; set; }
         public ICollection<string> Formatted { get; set; }
         public string FormattedArea { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public string LastName { get; set; }
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }
@@ -18082,7 +18082,7 @@ namespace Storefront.Cli
     public class MediaImage : IMedia, INode
     {
         public string Alt { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public Image Image { get; set; }
         public MediaContentType? MediaContentType { get; set; }
         public Image PreviewImage { get; set; }
@@ -18092,7 +18092,7 @@ namespace Storefront.Cli
     public class Menu : INode
     {
         public string Handle { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public ICollection<MenuItem> Items { get; set; }
         public int? ItemsCount { get; set; }
         public string Title { get; set; }
@@ -18101,7 +18101,7 @@ namespace Storefront.Cli
     [GraphQlObjectType("MenuItem")]
     public class MenuItem : INode
     {
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public ICollection<MenuItem> Items { get; set; }
         public Guid? ResourceId { get; set; }
         public ICollection<string> Tags { get; set; }
@@ -18116,7 +18116,7 @@ namespace Storefront.Cli
         public string Barcode { get; set; }
         public MoneyV2 CompareAtPrice { get; set; }
         public bool? CurrentlyNotInStock { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public Image Image { get; set; }
         public Metafield Metafield { get; set; }
         public ICollection<Metafield> Metafields { get; set; }
@@ -18140,7 +18140,7 @@ namespace Storefront.Cli
     {
         public DateTimeOffset? CreatedAt { get; set; }
         public string Description { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public string Key { get; set; }
         public string Namespace { get; set; }
         public MetafieldParentResource ParentResource { get; set; }
@@ -18161,7 +18161,7 @@ namespace Storefront.Cli
         public string Excerpt { get; set; }
         public object ExcerptHtml { get; set; }
         public string Handle { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public Image Image { get; set; }
         public Metafield Metafield { get; set; }
         public ICollection<Metafield> Metafields { get; set; }
@@ -18267,7 +18267,7 @@ namespace Storefront.Cli
         public string Description { get; set; }
         public object DescriptionHtml { get; set; }
         public string Handle { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public Image Image { get; set; }
         public Metafield Metafield { get; set; }
         public ICollection<Metafield> Metafields { get; set; }
@@ -18338,7 +18338,7 @@ namespace Storefront.Cli
     public class Model3D : IMedia, INode
     {
         public string Alt { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public MediaContentType? MediaContentType { get; set; }
         public Image PreviewImage { get; set; }
         public ICollection<Model3DSource> Sources { get; set; }
@@ -18406,7 +18406,7 @@ namespace Storefront.Cli
 
     public interface INode
     {
-        Guid? Id { get; set; }
+        string? Id { get; set; }
     }
 
     public interface IOnlineStorePublishable
@@ -18431,7 +18431,7 @@ namespace Storefront.Cli
         public string Email { get; set; }
         public OrderFinancialStatus? FinancialStatus { get; set; }
         public OrderFulfillmentStatus? FulfillmentStatus { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public OrderLineItemConnection LineItems { get; set; }
         public Metafield Metafield { get; set; }
         public ICollection<Metafield> Metafields { get; set; }
@@ -18498,7 +18498,7 @@ namespace Storefront.Cli
         public string BodySummary { get; set; }
         public DateTimeOffset? CreatedAt { get; set; }
         public string Handle { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public Metafield Metafield { get; set; }
         public ICollection<Metafield> Metafields { get; set; }
         public object OnlineStoreUrl { get; set; }
@@ -18536,7 +18536,7 @@ namespace Storefront.Cli
         public Checkout Checkout { get; set; }
         public CreditCard CreditCard { get; set; }
         public string ErrorMessage { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public string IdempotencyKey { get; set; }
         public object NextActionUrl { get; set; }
         public bool? Ready { get; set; }
@@ -18578,7 +18578,7 @@ namespace Storefront.Cli
         public object DescriptionHtml { get; set; }
         public Image FeaturedImage { get; set; }
         public string Handle { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public ImageConnection Images { get; set; }
         public bool? IsGiftCard { get; set; }
         public MediaConnection Media { get; set; }
@@ -18618,7 +18618,7 @@ namespace Storefront.Cli
     [GraphQlObjectType("ProductOption")]
     public class ProductOption : INode
     {
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public string Name { get; set; }
         public ICollection<string> Values { get; set; }
     }
@@ -18636,7 +18636,7 @@ namespace Storefront.Cli
         public string Barcode { get; set; }
         public MoneyV2 CompareAtPrice { get; set; }
         public bool? CurrentlyNotInStock { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public Image Image { get; set; }
         public Metafield Metafield { get; set; }
         public ICollection<Metafield> Metafields { get; set; }
@@ -18726,7 +18726,7 @@ namespace Storefront.Cli
     {
         public SellingPlanCheckoutCharge CheckoutCharge { get; set; }
         public string Description { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public string Name { get; set; }
         public ICollection<SellingPlanOption> Options { get; set; }
         public ICollection<SellingPlanPriceAdjustment> PriceAdjustments { get; set; }
@@ -18866,7 +18866,7 @@ namespace Storefront.Cli
     {
         public Brand Brand { get; set; }
         public string Description { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public Metafield Metafield { get; set; }
         public ICollection<Metafield> Metafields { get; set; }
         public string MoneyFormat { get; set; }
@@ -18886,7 +18886,7 @@ namespace Storefront.Cli
     {
         public string Body { get; set; }
         public string Handle { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public string Title { get; set; }
         public object Url { get; set; }
     }
@@ -18895,7 +18895,7 @@ namespace Storefront.Cli
     {
         public string Body { get; set; }
         public string Handle { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public string Title { get; set; }
         public object Url { get; set; }
     }
@@ -18952,7 +18952,7 @@ namespace Storefront.Cli
     [GraphQlObjectType("UrlRedirect")]
     public class UrlRedirect : INode
     {
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public string Path { get; set; }
         public string Target { get; set; }
     }
@@ -18981,7 +18981,7 @@ namespace Storefront.Cli
     public class Video : IMedia, INode
     {
         public string Alt { get; set; }
-        public Guid? Id { get; set; }
+        public string? Id { get; set; }
         public MediaContentType? MediaContentType { get; set; }
         public Image PreviewImage { get; set; }
         public ICollection<VideoSource> Sources { get; set; }
