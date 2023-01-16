@@ -25,43 +25,44 @@ public class ProductionQuery
 
     #region Methods
 
-    public async Task Execute()
-    {
+    public async Task<ProductConnection> Execute(int first = 3)
+    { 
+        
         var productConnection = new ProductConnectionQueryBuilder()
             .WithEdges(new ProductEdgeQueryBuilder()
                 .WithNode(new ProductQueryBuilder()
                     .WithId()
                     .WithTitle()
-                    .WithTotalInventory()
-                    // .WithVariants(
-                    //     new ProductVariantConnectionQueryBuilder()
-                    //         .WithEdges(new ProductVariantEdgeQueryBuilder()
-                    //             .WithNode(
-                    //                 new ProductVariantQueryBuilder()
-                    //                     .WithId()
-                    //                     .WithPrice(new MoneyV2QueryBuilder().WithAmount().WithCurrencyCode())
-                    //                     .WithTitle()
-                    //                     .WithWeight()
-                    //                     .WithWeightUnit()
-                    //                     .WithAvailableForSale()
-                    //             )
-                    //         )
-                    // )
+                    .WithHandle()
+                    .WithTags()
+                    // .WithTotalInventory()
+                    .WithVariants(
+                        new ProductVariantConnectionQueryBuilder()
+                            .WithEdges(new ProductVariantEdgeQueryBuilder()
+                                .WithNode(
+                                    new ProductVariantQueryBuilder()
+                                        .WithId()
+                                        .WithPrice(new MoneyV2QueryBuilder().WithAmount())
+                                        .WithAvailableForSale()
+                                )
+                            )
+                    , first)
                 )
             );
 
         var query = new QueryRootQueryBuilder()
             .WithProducts(productConnection, 100)
-            .Build();
-
-        // Console.WriteLine(productConnection.Build());
-        _logger.LogInformation(query);
+            .Build(Formatting.Indented);
+ 
+        // _logger.LogInformation(query);
 
         var request = new GraphQLRequest(query);
         
-        var response = await _client.SendQueryAsync<ProductConnection>(request);
+        var response = await _client.SendQueryAsync<QueryRoot>(request);
 
-        Console.WriteLine(response.Data);
+        // _logger.LogInformation("{data}", response.Data); 
+        
+        return response.Data.Products;
     }
 
     #endregion

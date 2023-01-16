@@ -37,15 +37,11 @@ public class CustomerQuery
         Console.Write(queryString);
 
         var request = new GraphQLRequest(queryString, new { customerAccessToken = accessToken });
-        var response = await _client.SendQueryAsync<CustomerQueryResponse>(request);
+        var response = await _client.SendQueryAsync<QueryRoot>(request);
 
         return response.Data.Customer;
     }
 
     #endregion
 }
-
-class CustomerQueryResponse
-{
-    public Customer Customer { get; init; }
-}
+ 

@@ -29,7 +29,7 @@ public class CreateCartCommand
 
     #region Methods
 
-    public async Task<Cart> Execute()
+    public async Task<Cart> Execute(string[] productIds)
     {
         var moneyBuilder = new MoneyV2QueryBuilder().WithAmount().WithCurrencyCode();
 
@@ -66,11 +66,14 @@ public class CreateCartCommand
                     )
             );
 
-        var cartInput = new CartInput();
-        var lineInput = new CartLineInput { Quantity = 1, MerchandiseId = "gid://shopify/ProductVariant/171319787544" };
-
-        cartInput.Note = "This is a note";
-        cartInput.Lines = new List<CartLineInput> { lineInput };
+        var cartInput = new CartInput
+        {
+            Note = "This is a note",
+            Lines = productIds.Select(id =>
+                    new CartLineInput { Quantity = 1, MerchandiseId = id }
+                )
+                .ToList()
+        };
 
         var builder = new MutationQueryBuilder()
             .WithCartCreate(cartPayloadBuilder, cartInput);
