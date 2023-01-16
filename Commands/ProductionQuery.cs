@@ -46,21 +46,21 @@ public class ProductionQuery
                                         .WithAvailableForSale()
                                 )
                             )
-                    , first)
+                    , first: 3)
                 )
             );
 
         var query = new QueryRootQueryBuilder()
-            .WithProducts(productConnection, 100)
+            .WithProducts(productConnection, first)
             .Build(Formatting.Indented);
  
-        // _logger.LogInformation(query);
+        _logger.LogInformation(query);
 
         var request = new GraphQLRequest(query);
         
         var response = await _client.SendQueryAsync<QueryRoot>(request);
 
-        // _logger.LogInformation("{data}", response.Data); 
+        _logger.LogInformation("{data}", response.Data); 
         
         return response.Data.Products;
     }
