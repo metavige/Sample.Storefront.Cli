@@ -54,13 +54,13 @@ public class ProductionQuery
             .WithProducts(productConnection, first)
             .Build(Formatting.Indented);
  
-        _logger.LogInformation(query);
+        _logger.LogDebug(query);
 
         var request = new GraphQLRequest(query);
         
         var response = await _client.SendQueryAsync<QueryRoot>(request);
 
-        _logger.LogInformation("{data}", response.Data); 
+        _logger.LogDebug("{data}", response.Data); 
         
         return response.Data.Products;
     }

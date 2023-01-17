@@ -1121,6 +1121,10 @@ namespace Storefront.Cli
         public const string Metafield = "Metafield";
         public const string MetafieldReferenceConnection = "MetafieldReferenceConnection";
         public const string MetafieldReferenceEdge = "MetafieldReferenceEdge";
+        public const string Metaobject = "Metaobject";
+        public const string MetaobjectConnection = "MetaobjectConnection";
+        public const string MetaobjectEdge = "MetaobjectEdge";
+        public const string MetaobjectField = "MetaobjectField";
         public const string Model3D = "Model3d";
         public const string Model3DSource = "Model3dSource";
         public const string MoneyV2 = "MoneyV2";
@@ -1209,6 +1213,7 @@ namespace Storefront.Cli
         public const string ImageTransformInput = "ImageTransformInput";
         public const string MailingAddressInput = "MailingAddressInput";
         public const string MetafieldFilter = "MetafieldFilter";
+        public const string MetaobjectHandleInput = "MetaobjectHandleInput";
         public const string MoneyInput = "MoneyInput";
         public const string PriceRangeFilter = "PriceRangeFilter";
         public const string ProductFilter = "ProductFilter";
@@ -1264,6 +1269,7 @@ namespace Storefront.Cli
                 { typeof(ImageTransformInput), "ImageTransformInput" },
                 { typeof(MailingAddressInput), "MailingAddressInput" },
                 { typeof(MetafieldFilter), "MetafieldFilter" },
+                { typeof(MetaobjectHandleInput), "MetaobjectHandleInput" },
                 { typeof(MoneyInput), "MoneyInput" },
                 { typeof(PriceRangeFilter), "PriceRangeFilter" },
                 { typeof(ProductFilter), "ProductFilter" },
@@ -9979,6 +9985,11 @@ namespace Storefront.Cli
             return WithFragment(mediaImageQueryBuilder, new GraphQlDirective[] { include, skip });
         }
 
+        public MetafieldReferenceQueryBuilder WithMetaobjectFragment(MetaobjectQueryBuilder metaobjectQueryBuilder, IncludeDirective include = null, SkipDirective skip = null)
+        {
+            return WithFragment(metaobjectQueryBuilder, new GraphQlDirective[] { include, skip });
+        }
+
         public MetafieldReferenceQueryBuilder WithPageFragment(PageQueryBuilder pageQueryBuilder, IncludeDirective include = null, SkipDirective skip = null)
         {
             return WithFragment(pageQueryBuilder, new GraphQlDirective[] { include, skip });
@@ -10076,6 +10087,245 @@ namespace Storefront.Cli
         public MetafieldReferenceEdgeQueryBuilder ExceptNode()
         {
             return ExceptField("node");
+        }
+    }
+
+    public class MetaobjectQueryBuilder : GraphQlQueryBuilder<MetaobjectQueryBuilder>
+    {
+        private static readonly GraphQlFieldMetadata[] AllFieldMetadata =
+            new []
+            {
+                new GraphQlFieldMetadata { Name = "field", IsComplex = true, QueryBuilderType = typeof(MetaobjectFieldQueryBuilder) },
+                new GraphQlFieldMetadata { Name = "fields", IsComplex = true, QueryBuilderType = typeof(MetaobjectFieldQueryBuilder) },
+                new GraphQlFieldMetadata { Name = "handle" },
+                new GraphQlFieldMetadata { Name = "id" },
+                new GraphQlFieldMetadata { Name = "type" },
+                new GraphQlFieldMetadata { Name = "updatedAt" }
+            };
+
+        protected override string TypeName { get { return "Metaobject"; } } 
+
+        public override IReadOnlyList<GraphQlFieldMetadata> AllFields { get { return AllFieldMetadata; } } 
+
+        public MetaobjectQueryBuilder WithField(MetaobjectFieldQueryBuilder metaobjectFieldQueryBuilder, QueryBuilderParameter<string> key, string alias = null, IncludeDirective include = null, SkipDirective skip = null)
+        {
+            var args = new List<QueryBuilderArgumentInfo>();
+            args.Add(new QueryBuilderArgumentInfo { ArgumentName = "key", ArgumentValue = key} );
+            return WithObjectField("field", alias, metaobjectFieldQueryBuilder, new GraphQlDirective[] { include, skip }, args);
+        }
+
+        public MetaobjectQueryBuilder ExceptField()
+        {
+            return ExceptField("field");
+        }
+
+        public MetaobjectQueryBuilder WithFields(MetaobjectFieldQueryBuilder metaobjectFieldQueryBuilder, string alias = null, IncludeDirective include = null, SkipDirective skip = null)
+        {
+            return WithObjectField("fields", alias, metaobjectFieldQueryBuilder, new GraphQlDirective[] { include, skip });
+        }
+
+        public MetaobjectQueryBuilder ExceptFields()
+        {
+            return ExceptField("fields");
+        }
+
+        public MetaobjectQueryBuilder WithHandle(string alias = null, IncludeDirective include = null, SkipDirective skip = null)
+        {
+            return WithScalarField("handle", alias, new GraphQlDirective[] { include, skip });
+        }
+
+        public MetaobjectQueryBuilder ExceptHandle()
+        {
+            return ExceptField("handle");
+        }
+
+        public MetaobjectQueryBuilder WithId(string alias = null, IncludeDirective include = null, SkipDirective skip = null)
+        {
+            return WithScalarField("id", alias, new GraphQlDirective[] { include, skip });
+        }
+
+        public MetaobjectQueryBuilder ExceptId()
+        {
+            return ExceptField("id");
+        }
+
+        public MetaobjectQueryBuilder WithType(string alias = null, IncludeDirective include = null, SkipDirective skip = null)
+        {
+            return WithScalarField("type", alias, new GraphQlDirective[] { include, skip });
+        }
+
+        public MetaobjectQueryBuilder ExceptType()
+        {
+            return ExceptField("type");
+        }
+
+        public MetaobjectQueryBuilder WithUpdatedAt(string alias = null, IncludeDirective include = null, SkipDirective skip = null)
+        {
+            return WithScalarField("updatedAt", alias, new GraphQlDirective[] { include, skip });
+        }
+
+        public MetaobjectQueryBuilder ExceptUpdatedAt()
+        {
+            return ExceptField("updatedAt");
+        }
+    }
+
+    public class MetaobjectConnectionQueryBuilder : GraphQlQueryBuilder<MetaobjectConnectionQueryBuilder>
+    {
+        private static readonly GraphQlFieldMetadata[] AllFieldMetadata =
+            new []
+            {
+                new GraphQlFieldMetadata { Name = "edges", IsComplex = true, QueryBuilderType = typeof(MetaobjectEdgeQueryBuilder) },
+                new GraphQlFieldMetadata { Name = "nodes", IsComplex = true, QueryBuilderType = typeof(MetaobjectQueryBuilder) },
+                new GraphQlFieldMetadata { Name = "pageInfo", IsComplex = true, QueryBuilderType = typeof(PageInfoQueryBuilder) }
+            };
+
+        protected override string TypeName { get { return "MetaobjectConnection"; } } 
+
+        public override IReadOnlyList<GraphQlFieldMetadata> AllFields { get { return AllFieldMetadata; } } 
+
+        public MetaobjectConnectionQueryBuilder WithEdges(MetaobjectEdgeQueryBuilder metaobjectEdgeQueryBuilder, string alias = null, IncludeDirective include = null, SkipDirective skip = null)
+        {
+            return WithObjectField("edges", alias, metaobjectEdgeQueryBuilder, new GraphQlDirective[] { include, skip });
+        }
+
+        public MetaobjectConnectionQueryBuilder ExceptEdges()
+        {
+            return ExceptField("edges");
+        }
+
+        public MetaobjectConnectionQueryBuilder WithNodes(MetaobjectQueryBuilder metaobjectQueryBuilder, string alias = null, IncludeDirective include = null, SkipDirective skip = null)
+        {
+            return WithObjectField("nodes", alias, metaobjectQueryBuilder, new GraphQlDirective[] { include, skip });
+        }
+
+        public MetaobjectConnectionQueryBuilder ExceptNodes()
+        {
+            return ExceptField("nodes");
+        }
+
+        public MetaobjectConnectionQueryBuilder WithPageInfo(PageInfoQueryBuilder pageInfoQueryBuilder, string alias = null, IncludeDirective include = null, SkipDirective skip = null)
+        {
+            return WithObjectField("pageInfo", alias, pageInfoQueryBuilder, new GraphQlDirective[] { include, skip });
+        }
+
+        public MetaobjectConnectionQueryBuilder ExceptPageInfo()
+        {
+            return ExceptField("pageInfo");
+        }
+    }
+
+    public class MetaobjectEdgeQueryBuilder : GraphQlQueryBuilder<MetaobjectEdgeQueryBuilder>
+    {
+        private static readonly GraphQlFieldMetadata[] AllFieldMetadata =
+            new []
+            {
+                new GraphQlFieldMetadata { Name = "cursor" },
+                new GraphQlFieldMetadata { Name = "node", IsComplex = true, QueryBuilderType = typeof(MetaobjectQueryBuilder) }
+            };
+
+        protected override string TypeName { get { return "MetaobjectEdge"; } } 
+
+        public override IReadOnlyList<GraphQlFieldMetadata> AllFields { get { return AllFieldMetadata; } } 
+
+        public MetaobjectEdgeQueryBuilder WithCursor(string alias = null, IncludeDirective include = null, SkipDirective skip = null)
+        {
+            return WithScalarField("cursor", alias, new GraphQlDirective[] { include, skip });
+        }
+
+        public MetaobjectEdgeQueryBuilder ExceptCursor()
+        {
+            return ExceptField("cursor");
+        }
+
+        public MetaobjectEdgeQueryBuilder WithNode(MetaobjectQueryBuilder metaobjectQueryBuilder, string alias = null, IncludeDirective include = null, SkipDirective skip = null)
+        {
+            return WithObjectField("node", alias, metaobjectQueryBuilder, new GraphQlDirective[] { include, skip });
+        }
+
+        public MetaobjectEdgeQueryBuilder ExceptNode()
+        {
+            return ExceptField("node");
+        }
+    }
+
+    public class MetaobjectFieldQueryBuilder : GraphQlQueryBuilder<MetaobjectFieldQueryBuilder>
+    {
+        private static readonly GraphQlFieldMetadata[] AllFieldMetadata =
+            new []
+            {
+                new GraphQlFieldMetadata { Name = "key" },
+                new GraphQlFieldMetadata { Name = "reference", IsComplex = true, QueryBuilderType = typeof(MetafieldReferenceQueryBuilder) },
+                new GraphQlFieldMetadata { Name = "references", IsComplex = true, QueryBuilderType = typeof(MetafieldReferenceConnectionQueryBuilder) },
+                new GraphQlFieldMetadata { Name = "type" },
+                new GraphQlFieldMetadata { Name = "value" }
+            };
+
+        protected override string TypeName { get { return "MetaobjectField"; } } 
+
+        public override IReadOnlyList<GraphQlFieldMetadata> AllFields { get { return AllFieldMetadata; } } 
+
+        public MetaobjectFieldQueryBuilder WithKey(string alias = null, IncludeDirective include = null, SkipDirective skip = null)
+        {
+            return WithScalarField("key", alias, new GraphQlDirective[] { include, skip });
+        }
+
+        public MetaobjectFieldQueryBuilder ExceptKey()
+        {
+            return ExceptField("key");
+        }
+
+        public MetaobjectFieldQueryBuilder WithReference(MetafieldReferenceQueryBuilder metafieldReferenceQueryBuilder, string alias = null, IncludeDirective include = null, SkipDirective skip = null)
+        {
+            return WithObjectField("reference", alias, metafieldReferenceQueryBuilder, new GraphQlDirective[] { include, skip });
+        }
+
+        public MetaobjectFieldQueryBuilder ExceptReference()
+        {
+            return ExceptField("reference");
+        }
+
+        public MetaobjectFieldQueryBuilder WithReferences(MetafieldReferenceConnectionQueryBuilder metafieldReferenceConnectionQueryBuilder, QueryBuilderParameter<int?> first = null, QueryBuilderParameter<string> after = null, QueryBuilderParameter<int?> last = null, QueryBuilderParameter<string> before = null, string alias = null, IncludeDirective include = null, SkipDirective skip = null)
+        {
+            var args = new List<QueryBuilderArgumentInfo>();
+            if (first != null)
+                args.Add(new QueryBuilderArgumentInfo { ArgumentName = "first", ArgumentValue = first} );
+
+            if (after != null)
+                args.Add(new QueryBuilderArgumentInfo { ArgumentName = "after", ArgumentValue = after} );
+
+            if (last != null)
+                args.Add(new QueryBuilderArgumentInfo { ArgumentName = "last", ArgumentValue = last} );
+
+            if (before != null)
+                args.Add(new QueryBuilderArgumentInfo { ArgumentName = "before", ArgumentValue = before} );
+
+            return WithObjectField("references", alias, metafieldReferenceConnectionQueryBuilder, new GraphQlDirective[] { include, skip }, args);
+        }
+
+        public MetaobjectFieldQueryBuilder ExceptReferences()
+        {
+            return ExceptField("references");
+        }
+
+        public MetaobjectFieldQueryBuilder WithType(string alias = null, IncludeDirective include = null, SkipDirective skip = null)
+        {
+            return WithScalarField("type", alias, new GraphQlDirective[] { include, skip });
+        }
+
+        public MetaobjectFieldQueryBuilder ExceptType()
+        {
+            return ExceptField("type");
+        }
+
+        public MetaobjectFieldQueryBuilder WithValue(string alias = null, IncludeDirective include = null, SkipDirective skip = null)
+        {
+            return WithScalarField("value", alias, new GraphQlDirective[] { include, skip });
+        }
+
+        public MetaobjectFieldQueryBuilder ExceptValue()
+        {
+            return ExceptField("value");
         }
     }
 
@@ -10407,7 +10657,7 @@ namespace Storefront.Cli
             return ExceptField("cartNoteUpdate");
         }
 
-        public MutationQueryBuilder WithCartSelectedDeliveryOptionsUpdate(CartSelectedDeliveryOptionsUpdatePayloadQueryBuilder cartSelectedDeliveryOptionsUpdatePayloadQueryBuilder, QueryBuilderParameter<Guid> cartId, QueryBuilderParameter<IEnumerable<CartSelectedDeliveryOptionInput>> selectedDeliveryOptions, string alias = null, IncludeDirective include = null, SkipDirective skip = null)
+        public MutationQueryBuilder WithCartSelectedDeliveryOptionsUpdate(CartSelectedDeliveryOptionsUpdatePayloadQueryBuilder cartSelectedDeliveryOptionsUpdatePayloadQueryBuilder, QueryBuilderParameter<string> cartId, QueryBuilderParameter<IEnumerable<CartSelectedDeliveryOptionInput>> selectedDeliveryOptions, string alias = null, IncludeDirective include = null, SkipDirective skip = null)
         {
             var args = new List<QueryBuilderArgumentInfo>();
             args.Add(new QueryBuilderArgumentInfo { ArgumentName = "cartId", ArgumentValue = cartId} );
@@ -10420,7 +10670,7 @@ namespace Storefront.Cli
             return ExceptField("cartSelectedDeliveryOptionsUpdate");
         }
 
-        public MutationQueryBuilder WithCheckoutAttributesUpdateV2(CheckoutAttributesUpdateV2PayloadQueryBuilder checkoutAttributesUpdateV2PayloadQueryBuilder, QueryBuilderParameter<Guid> checkoutId, QueryBuilderParameter<CheckoutAttributesUpdateV2Input> input, string alias = null, IncludeDirective include = null, SkipDirective skip = null)
+        public MutationQueryBuilder WithCheckoutAttributesUpdateV2(CheckoutAttributesUpdateV2PayloadQueryBuilder checkoutAttributesUpdateV2PayloadQueryBuilder, QueryBuilderParameter<string> checkoutId, QueryBuilderParameter<CheckoutAttributesUpdateV2Input> input, string alias = null, IncludeDirective include = null, SkipDirective skip = null)
         {
             var args = new List<QueryBuilderArgumentInfo>();
             args.Add(new QueryBuilderArgumentInfo { ArgumentName = "checkoutId", ArgumentValue = checkoutId} );
@@ -10951,6 +11201,11 @@ namespace Storefront.Cli
             return WithFragment(metafieldQueryBuilder, new GraphQlDirective[] { include, skip });
         }
 
+        public NodeQueryBuilder WithMetaobjectFragment(MetaobjectQueryBuilder metaobjectQueryBuilder, IncludeDirective include = null, SkipDirective skip = null)
+        {
+            return WithFragment(metaobjectQueryBuilder, new GraphQlDirective[] { include, skip });
+        }
+
         public NodeQueryBuilder WithModel3DFragment(Model3DQueryBuilder model3DQueryBuilder, IncludeDirective include = null, SkipDirective skip = null)
         {
             return WithFragment(model3DQueryBuilder, new GraphQlDirective[] { include, skip });
@@ -11067,6 +11322,7 @@ namespace Storefront.Cli
                 new GraphQlFieldMetadata { Name = "currentTotalDuties", IsComplex = true, QueryBuilderType = typeof(MoneyV2QueryBuilder) },
                 new GraphQlFieldMetadata { Name = "currentTotalPrice", IsComplex = true, QueryBuilderType = typeof(MoneyV2QueryBuilder) },
                 new GraphQlFieldMetadata { Name = "currentTotalTax", IsComplex = true, QueryBuilderType = typeof(MoneyV2QueryBuilder) },
+                new GraphQlFieldMetadata { Name = "customAttributes", IsComplex = true, QueryBuilderType = typeof(AttributeQueryBuilder) },
                 new GraphQlFieldMetadata { Name = "customerLocale" },
                 new GraphQlFieldMetadata { Name = "customerUrl", IsComplex = true },
                 new GraphQlFieldMetadata { Name = "discountApplications", IsComplex = true, QueryBuilderType = typeof(DiscountApplicationConnectionQueryBuilder) },
@@ -11167,6 +11423,16 @@ namespace Storefront.Cli
         public OrderQueryBuilder ExceptCurrentTotalTax()
         {
             return ExceptField("currentTotalTax");
+        }
+
+        public OrderQueryBuilder WithCustomAttributes(AttributeQueryBuilder attributeQueryBuilder, string alias = null, IncludeDirective include = null, SkipDirective skip = null)
+        {
+            return WithObjectField("customAttributes", alias, attributeQueryBuilder, new GraphQlDirective[] { include, skip });
+        }
+
+        public OrderQueryBuilder ExceptCustomAttributes()
+        {
+            return ExceptField("customAttributes");
         }
 
         public OrderQueryBuilder WithCustomerLocale(string alias = null, IncludeDirective include = null, SkipDirective skip = null)
@@ -13084,7 +13350,7 @@ namespace Storefront.Cli
             return ExceptField("sku");
         }
 
-        public ProductVariantQueryBuilder WithStoreAvailability(StoreAvailabilityConnectionQueryBuilder storeAvailabilityConnectionQueryBuilder, QueryBuilderParameter<int?> first = null, QueryBuilderParameter<string> after = null, QueryBuilderParameter<int?> last = null, QueryBuilderParameter<string> before = null, QueryBuilderParameter<bool?> reverse = null, string alias = null, IncludeDirective include = null, SkipDirective skip = null)
+        public ProductVariantQueryBuilder WithStoreAvailability(StoreAvailabilityConnectionQueryBuilder storeAvailabilityConnectionQueryBuilder, QueryBuilderParameter<int?> first = null, QueryBuilderParameter<string> after = null, QueryBuilderParameter<int?> last = null, QueryBuilderParameter<string> before = null, QueryBuilderParameter<bool?> reverse = null, QueryBuilderParameter<GeoCoordinateInput> near = null, string alias = null, IncludeDirective include = null, SkipDirective skip = null)
         {
             var args = new List<QueryBuilderArgumentInfo>();
             if (first != null)
@@ -13101,6 +13367,9 @@ namespace Storefront.Cli
 
             if (reverse != null)
                 args.Add(new QueryBuilderArgumentInfo { ArgumentName = "reverse", ArgumentValue = reverse} );
+
+            if (near != null)
+                args.Add(new QueryBuilderArgumentInfo { ArgumentName = "near", ArgumentValue = near} );
 
             return WithObjectField("storeAvailability", alias, storeAvailabilityConnectionQueryBuilder, new GraphQlDirective[] { include, skip }, args);
         }
@@ -13255,6 +13524,8 @@ namespace Storefront.Cli
                 new GraphQlFieldMetadata { Name = "localization", IsComplex = true, QueryBuilderType = typeof(LocalizationQueryBuilder) },
                 new GraphQlFieldMetadata { Name = "locations", IsComplex = true, QueryBuilderType = typeof(LocationConnectionQueryBuilder) },
                 new GraphQlFieldMetadata { Name = "menu", IsComplex = true, QueryBuilderType = typeof(MenuQueryBuilder) },
+                new GraphQlFieldMetadata { Name = "metaobject", IsComplex = true, QueryBuilderType = typeof(MetaobjectQueryBuilder) },
+                new GraphQlFieldMetadata { Name = "metaobjects", IsComplex = true, QueryBuilderType = typeof(MetaobjectConnectionQueryBuilder) },
                 new GraphQlFieldMetadata { Name = "node", IsComplex = true, QueryBuilderType = typeof(NodeQueryBuilder) },
                 new GraphQlFieldMetadata { Name = "nodes", IsComplex = true, QueryBuilderType = typeof(NodeQueryBuilder) },
                 new GraphQlFieldMetadata { Name = "page", IsComplex = true, QueryBuilderType = typeof(PageQueryBuilder) },
@@ -13490,6 +13761,53 @@ namespace Storefront.Cli
             return ExceptField("menu");
         }
 
+        public QueryRootQueryBuilder WithMetaobject(MetaobjectQueryBuilder metaobjectQueryBuilder, QueryBuilderParameter<Guid?> id = null, QueryBuilderParameter<MetaobjectHandleInput> handle = null, string alias = null, IncludeDirective include = null, SkipDirective skip = null)
+        {
+            var args = new List<QueryBuilderArgumentInfo>();
+            if (id != null)
+                args.Add(new QueryBuilderArgumentInfo { ArgumentName = "id", ArgumentValue = id} );
+
+            if (handle != null)
+                args.Add(new QueryBuilderArgumentInfo { ArgumentName = "handle", ArgumentValue = handle} );
+
+            return WithObjectField("metaobject", alias, metaobjectQueryBuilder, new GraphQlDirective[] { include, skip }, args);
+        }
+
+        public QueryRootQueryBuilder ExceptMetaobject()
+        {
+            return ExceptField("metaobject");
+        }
+
+        public QueryRootQueryBuilder WithMetaobjects(MetaobjectConnectionQueryBuilder metaobjectConnectionQueryBuilder, QueryBuilderParameter<string> type, QueryBuilderParameter<string> sortKey = null, QueryBuilderParameter<int?> first = null, QueryBuilderParameter<string> after = null, QueryBuilderParameter<int?> last = null, QueryBuilderParameter<string> before = null, QueryBuilderParameter<bool?> reverse = null, string alias = null, IncludeDirective include = null, SkipDirective skip = null)
+        {
+            var args = new List<QueryBuilderArgumentInfo>();
+            args.Add(new QueryBuilderArgumentInfo { ArgumentName = "type", ArgumentValue = type} );
+            if (sortKey != null)
+                args.Add(new QueryBuilderArgumentInfo { ArgumentName = "sortKey", ArgumentValue = sortKey} );
+
+            if (first != null)
+                args.Add(new QueryBuilderArgumentInfo { ArgumentName = "first", ArgumentValue = first} );
+
+            if (after != null)
+                args.Add(new QueryBuilderArgumentInfo { ArgumentName = "after", ArgumentValue = after} );
+
+            if (last != null)
+                args.Add(new QueryBuilderArgumentInfo { ArgumentName = "last", ArgumentValue = last} );
+
+            if (before != null)
+                args.Add(new QueryBuilderArgumentInfo { ArgumentName = "before", ArgumentValue = before} );
+
+            if (reverse != null)
+                args.Add(new QueryBuilderArgumentInfo { ArgumentName = "reverse", ArgumentValue = reverse} );
+
+            return WithObjectField("metaobjects", alias, metaobjectConnectionQueryBuilder, new GraphQlDirective[] { include, skip }, args);
+        }
+
+        public QueryRootQueryBuilder ExceptMetaobjects()
+        {
+            return ExceptField("metaobjects");
+        }
+
         public QueryRootQueryBuilder WithNode(NodeQueryBuilder nodeQueryBuilder, QueryBuilderParameter<Guid> id, string alias = null, IncludeDirective include = null, SkipDirective skip = null)
         {
             var args = new List<QueryBuilderArgumentInfo>();
@@ -13668,7 +13986,7 @@ namespace Storefront.Cli
             return ExceptField("shop");
         }
 
-        public QueryRootQueryBuilder WithUrlRedirects(UrlRedirectConnectionQueryBuilder urlRedirectConnectionQueryBuilder, QueryBuilderParameter<int?> first = null, QueryBuilderParameter<string> after = null, QueryBuilderParameter<int?> last = null, QueryBuilderParameter<string> before = null, QueryBuilderParameter<bool?> reverse = null, string alias = null, IncludeDirective include = null, SkipDirective skip = null)
+        public QueryRootQueryBuilder WithUrlRedirects(UrlRedirectConnectionQueryBuilder urlRedirectConnectionQueryBuilder, QueryBuilderParameter<int?> first = null, QueryBuilderParameter<string> after = null, QueryBuilderParameter<int?> last = null, QueryBuilderParameter<string> before = null, QueryBuilderParameter<bool?> reverse = null, QueryBuilderParameter<string> query = null, string alias = null, IncludeDirective include = null, SkipDirective skip = null)
         {
             var args = new List<QueryBuilderArgumentInfo>();
             if (first != null)
@@ -13685,6 +14003,9 @@ namespace Storefront.Cli
 
             if (reverse != null)
                 args.Add(new QueryBuilderArgumentInfo { ArgumentName = "reverse", ArgumentValue = reverse} );
+
+            if (query != null)
+                args.Add(new QueryBuilderArgumentInfo { ArgumentName = "query", ArgumentValue = query} );
 
             return WithObjectField("urlRedirects", alias, urlRedirectConnectionQueryBuilder, new GraphQlDirective[] { include, skip }, args);
         }
@@ -16722,6 +17043,36 @@ namespace Storefront.Cli
         }
     }
 
+    public class MetaobjectHandleInput : IGraphQlInputObject
+    {
+        private InputPropertyInfo _handle;
+        private InputPropertyInfo _type;
+
+        #if !GRAPHQL_GENERATOR_DISABLE_NEWTONSOFT_JSON
+        [JsonConverter(typeof(QueryBuilderParameterConverter<string>))]
+        #endif
+        public QueryBuilderParameter<string> Handle
+        {
+            get { return (QueryBuilderParameter<string>)_handle.Value; }
+            set { _handle = new InputPropertyInfo { Name = "handle", Value = value }; }
+        }
+
+        #if !GRAPHQL_GENERATOR_DISABLE_NEWTONSOFT_JSON
+        [JsonConverter(typeof(QueryBuilderParameterConverter<string>))]
+        #endif
+        public QueryBuilderParameter<string> Type
+        {
+            get { return (QueryBuilderParameter<string>)_type.Value; }
+            set { _type = new InputPropertyInfo { Name = "type", Value = value }; }
+        }
+
+        IEnumerable<InputPropertyInfo> IGraphQlInputObject.GetPropertyValues()
+        {
+            if (_handle.Name != null) yield return _handle;
+            if (_type.Name != null) yield return _type;
+        }
+    }
+
     public class MoneyInput : IGraphQlInputObject
     {
         private InputPropertyInfo _amount;
@@ -16791,6 +17142,7 @@ namespace Storefront.Cli
         private InputPropertyInfo _price;
         private InputPropertyInfo _productMetafield;
         private InputPropertyInfo _variantMetafield;
+        private InputPropertyInfo _tag;
 
         #if !GRAPHQL_GENERATOR_DISABLE_NEWTONSOFT_JSON
         [JsonConverter(typeof(QueryBuilderParameterConverter<bool?>))]
@@ -16855,6 +17207,15 @@ namespace Storefront.Cli
             set { _variantMetafield = new InputPropertyInfo { Name = "variantMetafield", Value = value }; }
         }
 
+        #if !GRAPHQL_GENERATOR_DISABLE_NEWTONSOFT_JSON
+        [JsonConverter(typeof(QueryBuilderParameterConverter<string>))]
+        #endif
+        public QueryBuilderParameter<string> Tag
+        {
+            get { return (QueryBuilderParameter<string>)_tag.Value; }
+            set { _tag = new InputPropertyInfo { Name = "tag", Value = value }; }
+        }
+
         IEnumerable<InputPropertyInfo> IGraphQlInputObject.GetPropertyValues()
         {
             if (_available.Name != null) yield return _available;
@@ -16864,6 +17225,7 @@ namespace Storefront.Cli
             if (_price.Name != null) yield return _price;
             if (_productMetafield.Name != null) yield return _productMetafield;
             if (_variantMetafield.Name != null) yield return _variantMetafield;
+            if (_tag.Name != null) yield return _tag;
         }
     }
 
@@ -17663,7 +18025,7 @@ namespace Storefront.Cli
         public DateTimeOffset? UpdatedAt { get; set; }
     }
 
-    public partial class CustomerAccessToken
+    public class CustomerAccessToken
     {
         public string AccessToken { get; set; }
         public object ExpiresAt { get; set; }
@@ -18196,6 +18558,7 @@ namespace Storefront.Cli
         public MoneyV2 CurrentTotalDuties { get; set; }
         public MoneyV2 CurrentTotalPrice { get; set; }
         public MoneyV2 CurrentTotalTax { get; set; }
+        public ICollection<Attribute> CustomAttributes { get; set; }
         public string CustomerLocale { get; set; }
         public object CustomerUrl { get; set; }
         public DiscountApplicationConnection DiscountApplications { get; set; }
@@ -18282,6 +18645,9 @@ namespace Storefront.Cli
         public Image PreviewImage { get; set; }
         public object Url { get; set; }
         public MediaContentType? MediaContentType { get; set; }
+        public MetaobjectField Field { get; set; }
+        public ICollection<MetaobjectField> Fields { get; set; }
+        public string Type { get; set; }
         public object Body { get; set; }
         public string BodySummary { get; set; }
         public DateTimeOffset? CreatedAt { get; set; }
@@ -18332,6 +18698,39 @@ namespace Storefront.Cli
     {
         public string Cursor { get; set; }
         public MetafieldReference Node { get; set; }
+    }
+
+    [GraphQlObjectType("Metaobject")]
+    public class Metaobject : INode
+    {
+        public MetaobjectField Field { get; set; }
+        public ICollection<MetaobjectField> Fields { get; set; }
+        public string Handle { get; set; }
+        public string? Id { get; set; }
+        public string Type { get; set; }
+        public DateTimeOffset? UpdatedAt { get; set; }
+    }
+
+    public class MetaobjectConnection
+    {
+        public ICollection<MetaobjectEdge> Edges { get; set; }
+        public ICollection<Metaobject> Nodes { get; set; }
+        public PageInfo PageInfo { get; set; }
+    }
+
+    public class MetaobjectEdge
+    {
+        public string Cursor { get; set; }
+        public Metaobject Node { get; set; }
+    }
+
+    public class MetaobjectField
+    {
+        public string Key { get; set; }
+        public MetafieldReference Reference { get; set; }
+        public MetafieldReferenceConnection References { get; set; }
+        public string Type { get; set; }
+        public string Value { get; set; }
     }
 
     [GraphQlObjectType("Model3d")]
@@ -18424,6 +18823,7 @@ namespace Storefront.Cli
         public MoneyV2 CurrentTotalDuties { get; set; }
         public MoneyV2 CurrentTotalPrice { get; set; }
         public MoneyV2 CurrentTotalTax { get; set; }
+        public ICollection<Attribute> CustomAttributes { get; set; }
         public string CustomerLocale { get; set; }
         public object CustomerUrl { get; set; }
         public DiscountApplicationConnection DiscountApplications { get; set; }
@@ -18680,6 +19080,8 @@ namespace Storefront.Cli
         public Localization Localization { get; set; }
         public LocationConnection Locations { get; set; }
         public Menu Menu { get; set; }
+        public Metaobject Metaobject { get; set; }
+        public MetaobjectConnection Metaobjects { get; set; }
         #if !GRAPHQL_GENERATOR_DISABLE_NEWTONSOFT_JSON
         [JsonConverter(typeof(GraphQlInterfaceJsonConverter))]
         #endif

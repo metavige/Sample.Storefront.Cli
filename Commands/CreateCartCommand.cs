@@ -29,7 +29,12 @@ public class CreateCartCommand
 
     #region Methods
 
-    public async Task<Cart> Execute(string[] productIds)
+    public async Task<Cart> Execute(
+        string[] productIds,
+        string customerAccessToken = "",
+        string firstName = "",
+        string address1 = ""
+    )
     {
         var moneyBuilder = new MoneyV2QueryBuilder().WithAmount().WithCurrencyCode();
 
@@ -41,13 +46,13 @@ public class CreateCartCommand
                     .WithCreatedAt()
                     .WithUpdatedAt()
                     .WithAttributes(new AttributeQueryBuilder().WithKey().WithValue())
-                    .WithCost(
-                        new CartCostQueryBuilder()
-                            .WithSubtotalAmount(moneyBuilder)
-                            .WithTotalAmount(moneyBuilder)
-                            .WithCheckoutChargeAmount(moneyBuilder)
-                            .WithTotalTaxAmount(moneyBuilder)
-                    )
+                    // .WithCost(
+                    //     new CartCostQueryBuilder()
+                    //         .WithSubtotalAmount(moneyBuilder)
+                    //         .WithTotalAmount(moneyBuilder)
+                    //         .WithCheckoutChargeAmount(moneyBuilder)
+                    //         .WithTotalTaxAmount(moneyBuilder)
+                    // )
                     .WithLines(
                         new CartLineConnectionQueryBuilder()
                             .WithEdges(
@@ -63,22 +68,39 @@ public class CreateCartCommand
                                             )
                                     )
                             )
-                    )
+                    , 10)
+                    // .WithBuyerIdentity(
+                    //     new CartBuyerIdentityQueryBuilder()
+                    //         .WithCustomer(new CustomerQueryBuilder().WithId().WithDisplayName())
+                    //         .WithDeliveryAddressPreferences(
+                    //             new DeliveryAddressQueryBuilder()
+                    //                 .WithMailingAddressFragment(
+                    //                     new MailingAddressQueryBuilder().WithId()
+                    //                         .WithCountry()
+                    //                         .WithAddress1()
+                    //                 )
+                    //         )
+                    // )
             );
 
         var cartInput = new CartInput
         {
             Note = "This is a note",
-            Lines = productIds.Select(id =>
-                    new CartLineInput { Quantity = 1, MerchandiseId = id }
+            Lines = productIds.Select(
+                    id =>
+                        new CartLineInput { Quantity = 1, MerchandiseId = id }
                 )
-                .ToList()
+                .ToList(),
+            BuyerIdentity = new CartBuyerIdentityInput
+            {
+                CustomerAccessToken = customerAccessToken
+            }
         };
 
         var builder = new MutationQueryBuilder()
             .WithCartCreate(cartPayloadBuilder, cartInput);
 
-        // _logger.LogInformation(builder.Build(Formatting.Indented));
+        _logger.LogDebug(builder.Build(Formatting.Indented));
 
         var request = new GraphQLRequest(builder.Build());
         var response = await _client.SendMutationAsync<Mutation>(request);
