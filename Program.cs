@@ -8,10 +8,15 @@ using Serilog.Events;
 using Spectre.Console;
 using Storefront.Cli.Commands;
 
+const string SHOP_ID = "eat-your-own-dog-food";
+const string API_VERSION = "2023-01";
+
+#region Initialize
+
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
-    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-    .MinimumLevel.Override("GraphQL", LogEventLevel.Information)
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+    .MinimumLevel.Override("GraphQL", LogEventLevel.Warning) 
     .Enrich.FromLogContext()
     .WriteTo.Console()
     .CreateLogger();
@@ -25,6 +30,10 @@ if (string.IsNullOrEmpty(apiToken))
     return;
 }
 
+#endregion
+
+#region Builder
+
 var services = new ServiceCollection();
 services.AddLogging(logger => logger.AddSerilog());
 services.AddHttpClient();
@@ -36,7 +45,7 @@ services.AddSingleton<IGraphQLClient>(sp =>
         var serializer = new SystemTextJsonSerializer(new JsonSerializerOptions(JsonSerializerDefaults.Web));
         var options = new GraphQLHttpClientOptions
         {
-            EndPoint = new Uri("https://eat-your-own-dog-food.myshopify.com/api/2023-01/graphql.json")
+            EndPoint = new Uri($"https://{SHOP_ID}.myshopify.com/api/{API_VERSION}/graphql.json")
         };
 
         return new GraphQLHttpClient(options, serializer, httpClient);
@@ -49,7 +58,13 @@ services.AddSingleton<ProductionQuery>();
 services.AddSingleton<CreateCartCommand>();
 services.AddSingleton<UpdateCartCommand>();
 
+#endregion
+
 var provider = services.BuildServiceProvider();
+
+// ===================================
+// 以下為執行的程式碼
+// ===================================
 
 // // 1. 使用者先登入 (使用帳號密碼，取得 Access Token)
 var username = AnsiConsole.Ask<string>("登入帳號:");
@@ -64,24 +79,26 @@ var prodQuery = provider.GetRequiredService<ProductionQuery>();
 var prods = await prodQuery.Execute(first);
 
 var choiceProds = AnsiConsole.Prompt(
-    new SelectionPrompt<string>()
+    new MultiSelectionPrompt<string>()
         .Title("要購買的項目?")
         .PageSize(first)
         .MoreChoicesText("[grey](上下移動選擇)[/]")
         .AddChoices(prods.Edges.Select(p => p.Node.Title)));
 
-var productId = prods.Edges
-    .Where(p => p.Node.Title == choiceProds)
-    .Select(p => p.Node.Variants.Edges.First().Node.Id)
-    .FirstOrDefault();
+var productIds = prods.Edges
+    .Where(p => choiceProds.Contains(p.Node.Title))
+    .Select(p => p.Node.Variants.Edges.First().Node.Id);
  
 // 3. 使用者加入購物車 (加入購物車)
 var cartCreateCommand = provider.GetRequiredService<CreateCartCommand>();
-var cart = await cartCreateCommand.Execute(new [] { productId }, token.AccessToken);
+var cart = await cartCreateCommand.Execute(productIds, token.AccessToken);
 
-// 4. TODO: 設定使用者資訊 (取貨人名稱，取貨地址)
-// var updateCartCommand = provider.GetRequiredService<UpdateCartCommand>();
-// await updateCartCommand.ExecuteAsync("gid://shopify/Cart/d7f5f32aaa5fb525332536d9e67676a5");
+// 4. 設定使用者資訊 (取貨人名稱，取貨地址)
+var firstName = AnsiConsole.Ask<string>("取貨人名稱:");
+var address = AnsiConsole.Ask<string>("收貨地址:");
+
+var updateCartCommand = provider.GetRequiredService<UpdateCartCommand>();
+await updateCartCommand.ExecuteAsync(cart.Id, token.AccessToken, "Taiwan", firstName, address);
 
 // 5. TODO: 設定付款方式 (信用卡)
 
@@ -96,7 +113,6 @@ AnsiConsole.WriteLine(cart.CheckoutUrl.ToString());
 // }
 
 // 8. TODO: 付款成功，取得訂單網址
-
 //
 // var m = new MutationQueryBuilder()
 //     .WithCartSelectedDeliveryOptionsUpdate(

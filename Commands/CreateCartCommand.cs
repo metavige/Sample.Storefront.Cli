@@ -30,14 +30,10 @@ public class CreateCartCommand
     #region Methods
 
     public async Task<Cart> Execute(
-        string[] productIds,
-        string customerAccessToken = "",
-        string firstName = "",
-        string address1 = ""
+        IEnumerable<string> productIds,
+        string customerAccessToken = ""
     )
-    {
-        var moneyBuilder = new MoneyV2QueryBuilder().WithAmount().WithCurrencyCode();
-
+    { 
         var cartPayloadBuilder = new CartCreatePayloadQueryBuilder()
             .WithCart(
                 new CartQueryBuilder()
@@ -45,14 +41,6 @@ public class CreateCartCommand
                     .WithCheckoutUrl()
                     .WithCreatedAt()
                     .WithUpdatedAt()
-                    .WithAttributes(new AttributeQueryBuilder().WithKey().WithValue())
-                    // .WithCost(
-                    //     new CartCostQueryBuilder()
-                    //         .WithSubtotalAmount(moneyBuilder)
-                    //         .WithTotalAmount(moneyBuilder)
-                    //         .WithCheckoutChargeAmount(moneyBuilder)
-                    //         .WithTotalTaxAmount(moneyBuilder)
-                    // )
                     .WithLines(
                         new CartLineConnectionQueryBuilder()
                             .WithEdges(
@@ -67,29 +55,15 @@ public class CreateCartCommand
                                                     )
                                             )
                                     )
-                            )
-                    , 10)
-                    // .WithBuyerIdentity(
-                    //     new CartBuyerIdentityQueryBuilder()
-                    //         .WithCustomer(new CustomerQueryBuilder().WithId().WithDisplayName())
-                    //         .WithDeliveryAddressPreferences(
-                    //             new DeliveryAddressQueryBuilder()
-                    //                 .WithMailingAddressFragment(
-                    //                     new MailingAddressQueryBuilder().WithId()
-                    //                         .WithCountry()
-                    //                         .WithAddress1()
-                    //                 )
-                    //         )
-                    // )
+                            ),
+                        10
+                    )
             );
 
         var cartInput = new CartInput
         {
             Note = "This is a note",
-            Lines = productIds.Select(
-                    id =>
-                        new CartLineInput { Quantity = 1, MerchandiseId = id }
-                )
+            Lines = productIds.Select(id => new CartLineInput { Quantity = 1, MerchandiseId = id })
                 .ToList(),
             BuyerIdentity = new CartBuyerIdentityInput
             {

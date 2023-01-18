@@ -19,52 +19,51 @@ public class UpdateCartCommand
 
     #region Methods
 
-    public async Task ExecuteAsync(string cartId, string customerAccessToken = "79454d3436f8c527cbfb0ecc59528d0c")
+    public async Task ExecuteAsync(
+        string cartId,
+        string customerAccessToken,
+        string country = "TW",
+        string address = "",
+        string firstName = ""
+    )
     {
-        var mutation = new MutationQueryBuilder()
-            .WithCartSelectedDeliveryOptionsUpdate(
-                new CartSelectedDeliveryOptionsUpdatePayloadQueryBuilder(),
-                cartId,
-                new List<CartSelectedDeliveryOptionInput>
+        var queryBuilder = new CartBuyerIdentityUpdatePayloadQueryBuilder()
+            .WithCart(
+                new CartQueryBuilder()
+                    .WithBuyerIdentity(
+                        new CartBuyerIdentityQueryBuilder()
+                            .WithDeliveryAddressPreferences(
+                                new DeliveryAddressQueryBuilder()
+                                    .WithMailingAddressFragment(
+                                        new MailingAddressQueryBuilder()
+                                            .WithId()
+                                            .WithAddress1()
+                                            .WithName()
+                                    )
+                            )
+                    )
+            );
+
+        var input = new CartBuyerIdentityInput
+        {
+            DeliveryAddressPreferences = new List<DeliveryAddressInput>
+            {
+                new()
                 {
-                    new()
-                    {
-                        DeliveryOptionHandle = "" 
+                    DeliveryAddress = new MailingAddressInput
+                    { 
+                        Country = country,
+                        Address1 = address,
+                        FirstName = firstName
                     }
                 }
-            );
-        //
-        // var mutation = new MutationQueryBuilder()
-        //     .WithCartBuyerIdentityUpdate(
-        //         new CartBuyerIdentityUpdatePayloadQueryBuilder().WithCart(
-        //             new CartQueryBuilder().WithBuyerIdentity(
-        //                 new CartBuyerIdentityQueryBuilder().WithDeliveryAddressPreferences(
-        //                     new DeliveryAddressQueryBuilder().WithMailingAddressFragment(new MailingAddressQueryBuilder().WithId()
-        //                         .WithAddress1()
-        //                         .WithName()
-        //                     )
-        //                 )
-        //             )
-        //         ),
-        //         cartId, new CartBuyerIdentityInput
-        //         {
-        //             DeliveryAddressPreferences = new List<DeliveryAddressInput>
-        //             {
-        //                 new()
-        //                 {
-        //                     DeliveryAddress = new MailingAddressInput
-        //                     {
-        //                         Country = "TW",
-        //                         Address1 = "123 Main St",
-        //                         FirstName = "John"
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     );
+            }
+        };
+        
+        var mutation = new MutationQueryBuilder()
+            .WithCartBuyerIdentityUpdate(queryBuilder, cartId, input);
 
         var query = mutation.Build(Formatting.Indented);
-
         var response = await _client.SendMutationAsync<Mutation>(query);
 
         Console.WriteLine(response.Data);

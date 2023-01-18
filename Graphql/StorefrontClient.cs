@@ -10561,7 +10561,7 @@ namespace Storefront.Cli
             return ExceptField("cartAttributesUpdate");
         }
 
-        public MutationQueryBuilder WithCartBuyerIdentityUpdate(CartBuyerIdentityUpdatePayloadQueryBuilder cartBuyerIdentityUpdatePayloadQueryBuilder, QueryBuilderParameter<Guid> cartId, QueryBuilderParameter<CartBuyerIdentityInput> buyerIdentity, string alias = null, IncludeDirective include = null, SkipDirective skip = null)
+        public MutationQueryBuilder WithCartBuyerIdentityUpdate(CartBuyerIdentityUpdatePayloadQueryBuilder cartBuyerIdentityUpdatePayloadQueryBuilder, QueryBuilderParameter<string> cartId, QueryBuilderParameter<CartBuyerIdentityInput> buyerIdentity, string alias = null, IncludeDirective include = null, SkipDirective skip = null)
         {
             var args = new List<QueryBuilderArgumentInfo>();
             args.Add(new QueryBuilderArgumentInfo { ArgumentName = "cartId", ArgumentValue = cartId} );
