@@ -25,7 +25,7 @@ public class ProductionQuery
 
     #region Methods
 
-    public async Task<ProductConnection> Execute(int first = 3)
+    public async Task<ProductConnection> ExecuteAsync(int first = 3)
     { 
         
         var productConnection = new ProductConnectionQueryBuilder()

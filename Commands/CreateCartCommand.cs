@@ -1,10 +1,11 @@
 using GraphQL;
 using GraphQL.Client.Abstractions;
 using Microsoft.Extensions.Logging;
+using Storefront.Cli.Commands.Base;
 
 namespace Storefront.Cli.Commands;
 
-public class CreateCartCommand
+public class CreateCartCommand : BaseCommand<CreateCartRequest, Cart> 
 {
     #region Fields
 
@@ -29,10 +30,7 @@ public class CreateCartCommand
 
     #region Methods
 
-    public async Task<Cart> Execute(
-        IEnumerable<string> productIds,
-        string customerAccessToken = ""
-    )
+    protected override async Task<Cart> DoExecuteAsync(CreateCartRequest request)
     { 
         var cartPayloadBuilder = new CartCreatePayloadQueryBuilder()
             .WithCart(
@@ -63,11 +61,11 @@ public class CreateCartCommand
         var cartInput = new CartInput
         {
             Note = "This is a note",
-            Lines = productIds.Select(id => new CartLineInput { Quantity = 1, MerchandiseId = id })
+            Lines = request.ProductIds.Select(id => new CartLineInput { Quantity = 1, MerchandiseId = id })
                 .ToList(),
             BuyerIdentity = new CartBuyerIdentityInput
             {
-                CustomerAccessToken = customerAccessToken
+                CustomerAccessToken = request.AccessToken
             }
         };
 
@@ -75,13 +73,18 @@ public class CreateCartCommand
             .WithCartCreate(cartPayloadBuilder, cartInput);
 
         _logger.LogDebug(builder.Build(Formatting.Indented));
-
-        var request = new GraphQLRequest(builder.Build());
-        var response = await _client.SendMutationAsync<Mutation>(request);
+ 
+        var response = await _client.SendMutationAsync<Mutation>(new GraphQLRequest(builder.Build()));
 
         return response.Data.CartCreate.Cart;
         // return null;
     }
 
     #endregion
+}
+
+public class CreateCartRequest
+{
+    public IEnumerable<string> ProductIds { get; init; }
+    public string AccessToken { get; init; }
 }

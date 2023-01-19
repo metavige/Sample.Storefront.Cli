@@ -15,8 +15,9 @@ const string API_VERSION = "2023-01";
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
+    .MinimumLevel.Override("System", LogEventLevel.Error)
     .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-    .MinimumLevel.Override("GraphQL", LogEventLevel.Warning) 
+    .MinimumLevel.Override("GraphQL", LogEventLevel.Error)
     .Enrich.FromLogContext()
     .WriteTo.Console()
     .CreateLogger();
@@ -58,10 +59,11 @@ services.AddSingleton<ProductionQuery>();
 services.AddSingleton<CreateCartCommand>();
 services.AddSingleton<UpdateCartCommand>();
 
-#endregion
-
 var provider = services.BuildServiceProvider();
 
+#endregion
+
+#region 執行步驟
 // ===================================
 // 以下為執行的程式碼
 // ===================================
@@ -71,27 +73,28 @@ var username = AnsiConsole.Ask<string>("登入帳號:");
 var password = AnsiConsole.Prompt(new TextPrompt<string>("密碼:").PromptStyle("red").Secret());
 
 var accessTokenCommand = provider.GetRequiredService<CustomerAccessTokenCreateCommand>();
-var token = await accessTokenCommand.Execute(username, password);
+var token = await accessTokenCommand.ExecuteAsync(new AccessTokenRequest(username, password));
 
 // 2. 使用者查詢產品 (查詢產品資訊)
 var first = 10;
 var prodQuery = provider.GetRequiredService<ProductionQuery>();
-var prods = await prodQuery.Execute(first);
+var prods = await prodQuery.ExecuteAsync(first);
 
 var choiceProds = AnsiConsole.Prompt(
     new MultiSelectionPrompt<string>()
         .Title("要購買的項目?")
         .PageSize(first)
         .MoreChoicesText("[grey](上下移動選擇)[/]")
-        .AddChoices(prods.Edges.Select(p => p.Node.Title)));
+        .AddChoices(prods.Edges.Select(p => p.Node.Title))
+);
 
 var productIds = prods.Edges
     .Where(p => choiceProds.Contains(p.Node.Title))
     .Select(p => p.Node.Variants.Edges.First().Node.Id);
- 
+
 // 3. 使用者加入購物車 (加入購物車)
 var cartCreateCommand = provider.GetRequiredService<CreateCartCommand>();
-var cart = await cartCreateCommand.Execute(productIds, token.AccessToken);
+var cart = await cartCreateCommand.ExecuteAsync(new CreateCartRequest { ProductIds = productIds, AccessToken = token.AccessToken });
 
 // 4. 設定使用者資訊 (取貨人名稱，取貨地址)
 var firstName = AnsiConsole.Ask<string>("取貨人名稱:");
@@ -103,27 +106,28 @@ await updateCartCommand.ExecuteAsync(cart.Id, token.AccessToken, "Taiwan", first
 // 5. TODO: 設定付款方式 (信用卡)
 
 // 6. 建立購物車，取得 Checkout Url
-AnsiConsole.WriteLine("請點選以下連結進行付款: ");
-AnsiConsole.WriteLine(cart.CheckoutUrl.ToString());
+var customerQuery = provider.GetRequiredService<CustomerQuery>();
+var customer = await customerQuery.QueryAsync(token.AccessToken);
 
-// 7. TODO: 使用者前往 Checkout Url 付款 (等待 hook 回傳付款結果)
-// while (true)
-// {   
-//     // 等待處理   
-// }
+AnsiConsole.WriteLine("請點選以下連結進行付款: ");
+AnsiConsole.WriteLine(customer.LastIncompleteCheckout.WebUrl.ToString());
+
+AnsiConsole.WriteLine("\n(等待付款完成.....)\n");
+
+// 7. 使用者前往 Checkout Url 付款 (等待 hook 回傳付款結果)
+while (true)
+{
+    Thread.Sleep(TimeSpan.FromSeconds(5));
+    // 等待處理
+    customer = await customerQuery.QueryAsync(token.AccessToken);
+
+    if (customer.LastIncompleteCheckout.Order != null)
+    {
+        break;
+    }
+}
 
 // 8. TODO: 付款成功，取得訂單網址
-//
-// var m = new MutationQueryBuilder()
-//     .WithCartSelectedDeliveryOptionsUpdate(
-//         new CartSelectedDeliveryOptionsUpdatePayloadQueryBuilder()
-//             .WithCart(new CartQueryBuilder()
-//                 .WithId()
-//             ),
-//         "gid://shopify/Cart/1db6f5a15344435f17d27639480a860c",
-//         new List<CartSelectedDeliveryOptionInput>
-//         {
-//             new() { DeliveryOptionHandle = "" }
-//         });
-//         
-// Console.WriteLine(m.Build(Formatting.Indented));
+AnsiConsole.WriteLine("[blue]狀態網址:[/]" + customer.Orders.Nodes.FirstOrDefault()?.StatusUrl.ToString());
+
+#endregion
